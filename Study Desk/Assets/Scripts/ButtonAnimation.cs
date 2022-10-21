@@ -58,7 +58,7 @@ namespace StudyDesk.Utilities{
             lastRoutine = StartCoroutine(HoverOff());
         }
 
-        public void OnMouseClick(){
+        public void ToggleSelect(){
             selected = !selected;
 
             if(selected){
@@ -69,6 +69,24 @@ namespace StudyDesk.Utilities{
                 buttonText.color = initialTextColor;
                 buttonText.fontStyle = FontStyle.Normal;
             }
+
+            //Play Click Sound
+        }
+
+        public void Select(){
+            selected = true;
+
+            buttonText.color = selectedTextColor;
+            buttonText.fontStyle = FontStyle.Bold;
+
+            //Play Click Sound
+        }
+
+        public void Deselect(){
+            selected = false;
+
+            buttonText.color = initialTextColor;
+            buttonText.fontStyle = FontStyle.Normal;
 
             //Play Click Sound
         }
