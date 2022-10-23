@@ -10,6 +10,12 @@ public class TaskPanel : MonoBehaviour
     Creating tasks, editing tasks, removing tasks, etc.
     */
 
+    [Header("References")]
+    [SerializeField]
+    private Transform taskItemContainer;
+    [SerializeField]
+    private GameObject taskItem;
+
     [Header("Panel Settings")]
     [SerializeField]
     private Vector3 openAnchorPosition;

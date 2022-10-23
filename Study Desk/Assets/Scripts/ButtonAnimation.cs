@@ -23,6 +23,9 @@ namespace StudyDesk.Utilities{
         [Header("Settings")]
         [SerializeField]
         private Color lerpToButtonColor;
+        [Tooltip("Whether or not the color of the text gets toggled")]
+        [SerializeField]
+        private bool canToggle;
         [SerializeField]
         private Color selectedTextColor;
         [SerializeField]
@@ -59,6 +62,8 @@ namespace StudyDesk.Utilities{
         }
 
         public void ToggleSelect(){
+            if(!canToggle) return;
+
             selected = !selected;
 
             if(selected){
@@ -74,6 +79,8 @@ namespace StudyDesk.Utilities{
         }
 
         public void Select(){
+            if(!canToggle) return;
+
             selected = true;
 
             buttonText.color = selectedTextColor;
@@ -83,6 +90,8 @@ namespace StudyDesk.Utilities{
         }
 
         public void Deselect(){
+            if(!canToggle) return;
+
             selected = false;
 
             buttonText.color = initialTextColor;
@@ -98,6 +107,7 @@ namespace StudyDesk.Utilities{
                 buttonRect.anchoredPosition = Vector3.Lerp(buttonRect.anchoredPosition, lerpToPos, Time.deltaTime * lerpSpeed);
                 buttonRect.sizeDelta = Vector2.Lerp(buttonRect.sizeDelta, lerpToSize, Time.deltaTime * lerpSpeed);
                 image.color = Color.Lerp(image.color, lerpToButtonColor, Time.deltaTime * lerpSpeed);
+
                 yield return new WaitForEndOfFrame();
             }
             yield return null;
@@ -108,6 +118,7 @@ namespace StudyDesk.Utilities{
                 buttonRect.anchoredPosition = Vector3.Lerp(buttonRect.anchoredPosition, initialRectPos, Time.deltaTime * lerpSpeed);
                 buttonRect.sizeDelta = Vector2.Lerp(buttonRect.sizeDelta, initialSize, Time.deltaTime * lerpSpeed);
                 image.color = Color.Lerp(image.color, initialButtonColor, Time.deltaTime * lerpSpeed);
+
                 yield return new WaitForEndOfFrame();
             }
             yield return null;
