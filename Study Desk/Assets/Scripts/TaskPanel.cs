@@ -14,7 +14,7 @@ public class TaskPanel : MonoBehaviour
     [SerializeField]
     private Transform taskItemContainer;
     [SerializeField]
-    private GameObject taskItem;
+    private GameObject taskItemPrefab;
 
     [Header("Panel Settings")]
     [SerializeField]
@@ -46,6 +46,14 @@ public class TaskPanel : MonoBehaviour
         else{
             thisRect.anchoredPosition = Vector3.Lerp(thisRect.anchoredPosition, closedAnchorPosition, closeLerpSpeed * Time.deltaTime);
         }
+    }
+
+    public void CreateTaskOnClick(){
+        CreateTask();
+    }
+
+    public void CreateTask(){
+        Instantiate(taskItemPrefab, taskItemContainer);
     }
     
     public void OpenPanel(){

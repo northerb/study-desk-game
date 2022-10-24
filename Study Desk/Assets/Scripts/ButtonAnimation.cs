@@ -48,7 +48,10 @@ namespace StudyDesk.Utilities{
             initialRectPos = buttonRect.anchoredPosition;
             initialSize = buttonRect.sizeDelta;
             initialButtonColor = image.color;
-            initialTextColor = buttonText.color;
+
+            if(buttonText != null){
+                initialTextColor = buttonText.color;
+            }
         }
 
         public void OnHoverOver(){
