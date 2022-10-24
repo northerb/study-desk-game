@@ -78,8 +78,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -230.8439, y: 0}
-  m_SizeDelta: {x: 342.31232, y: 48}
+  m_AnchoredPosition: {x: -231.3366, y: 0}
+  m_SizeDelta: {x: 341.3268, y: 48}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3236043562702501390
 CanvasRenderer:
@@ -206,7 +206,7 @@ MonoBehaviour:
   canToggle: 0
   selectedTextColor: {r: 0, g: 0, b: 0, a: 0}
   lerpToPos: {x: 0, y: 0, z: 0}
-  lerpToSize: {x: 0, y: 48}
+  lerpToSize: {x: -1, y: 48}
   lerpSpeed: 15
 --- !u!1 &3236043563398544597
 GameObject:
@@ -661,5 +661,5 @@ MonoBehaviour:
   canToggle: 0
   selectedTextColor: {r: 0, g: 0, b: 0, a: 0}
   lerpToPos: {x: 0, y: 0, z: 0}
-  lerpToSize: {x: 0, y: 49}
+  lerpToSize: {x: -1, y: 49}
   lerpSpeed: 15
