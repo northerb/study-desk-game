@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using StudyDesk.Utilities;
 
 public class TaskItem : MonoBehaviour
@@ -12,7 +13,14 @@ public class TaskItem : MonoBehaviour
     [SerializeField]
     private Button taskFinishButton;
     [SerializeField]
-    private Text taskText;
+    private TMP_Text taskText;
+    [SerializeField]
+    private Button taskEditButton;
+    [SerializeField]
+    private Button taskStrikethroughButton;
+    [SerializeField]
+    private Button taskDeleteButton;
+    
 
     [Header("Button Animation References")]
     [SerializeField]
@@ -31,6 +39,8 @@ public class TaskItem : MonoBehaviour
     private float lerpSpeed1;
     [SerializeField]
     private float lerpSpeed2;
+    [SerializeField]
+    private Color taskStrikethroughColor;
 
 
     [SerializeField]
@@ -46,13 +56,42 @@ public class TaskItem : MonoBehaviour
         taskText.text = taskInputField.text;
 
         taskText.gameObject.SetActive(true);
+        taskEditButton.gameObject.SetActive(true);
+        taskStrikethroughButton.gameObject.SetActive(true);
+        taskDeleteButton.gameObject.SetActive(true);
 
         // taskInputField.gameObject.SetActive(false);
         // taskFinishButton.gameObject.SetActive(false);
 
         inputFieldAnimator.OnHoverOver();
         finishButtonAnimator.OnHoverOver();
-       
+        
+    }
+
+    public void StrikeThroughOnClick(){
+        if(taskText.fontStyle == FontStyles.Strikethrough){
+            taskText.fontStyle = FontStyles.Normal;
+            taskText.color = Color.white;
+
+        }else{
+            taskText.fontStyle = FontStyles.Strikethrough;
+            taskText.color = taskStrikethroughColor;
+        }
+    }
+
+    public void EditTaskOnClick(){
+        taskText.gameObject.SetActive(false);
+        taskEditButton.gameObject.SetActive(false);
+        taskStrikethroughButton.gameObject.SetActive(false);
+        taskDeleteButton.gameObject.SetActive(false);
+
+        inputFieldAnimator.OnHoverOff();
+        finishButtonAnimator.OnHoverOff();
+    }
+
+    public void DeleteTaskOnClick(){
+        //Replace with something more graceful
+        Destroy(gameObject);
     }
 
 
