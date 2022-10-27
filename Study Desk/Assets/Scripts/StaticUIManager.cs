@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using StudyDesk.Utilities;
 
 public class StaticUIManager : MonoBehaviour
@@ -26,14 +27,24 @@ public class StaticUIManager : MonoBehaviour
     TaskPanel taskPanel;
     [SerializeField]
     TaskPanel storePanel;
+    [SerializeField]
+    private Transform creditChangeItemContainer;
+    [SerializeField]
+    private GameObject creditChangePrefab;
+    [SerializeField]
+    private Text creditText;
+    [SerializeField]
+    private float creditTextUpdateLerpTime;
+
 
     //These buttons should be on the right-hand side of the game, linked to each panel on this script.
     [Header("Side Buttons")]
     [SerializeField]
     ButtonAnimation[] buttonAnimationScripts;
 
-    public Panel currentOpenPanel;
-
+    Panel currentOpenPanel;
+    private Coroutine lastRoutine;
+    private int currentTextCredits;
 
     public void TogglePanel(int panel){
         Panel newPanel = (Panel)panel;
@@ -71,4 +82,40 @@ public class StaticUIManager : MonoBehaviour
         }
         buttonAnimationScripts[(int)currentOpenPanel].Deselect();
     }
+
+
+    public void SetCredits(int newCredits, int changeAmount){
+        if(changeAmount == 0) return;
+
+        CreditChangeItem creditChangeItem = Instantiate(creditChangePrefab, creditChangeItemContainer).GetComponent<CreditChangeItem>();
+        creditChangeItem.Initialize(changeAmount);
+
+        if(lastRoutine != null){
+            StopCoroutine(lastRoutine);
+            lastRoutine = StartCoroutine(UpdateCreditCount(newCredits));
+        }else{
+            lastRoutine = StartCoroutine(UpdateCreditCount(newCredits));
+        }
+    }
+
+    IEnumerator UpdateCreditCount(int newCredits){
+        float lerp = 0f, duration = creditTextUpdateLerpTime;
+        int score = currentTextCredits;
+        int scoreTo = newCredits;
+
+        while(currentTextCredits != newCredits){
+            //Calculate lerp int
+
+            lerp += Time.deltaTime / duration;
+            score = (int)Mathf.Lerp(score, scoreTo, lerp);
+     
+            currentTextCredits = score;
+
+            creditText.text = currentTextCredits + " CREDITS";
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+
+    
 }
