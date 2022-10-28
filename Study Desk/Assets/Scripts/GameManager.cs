@@ -29,9 +29,7 @@ public class GameManager : MonoBehaviour
     
 
     void Update(){
-        if(Input.anyKeyDown){
-            AddCredits(Random.Range(-100,100));
-        }
+
     }
 
     public void AddCredits(int amount){

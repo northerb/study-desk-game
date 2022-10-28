@@ -8,7 +8,7 @@ public class StaticUIManager : MonoBehaviour
 {
     /*
     This script manages the large panels movement, allowing for all static items to access
-    other objects indirectly.
+    other objects indirectly. This script also manages the big picture timer stuff.
     */
 
     #region  Singleton
@@ -26,7 +26,9 @@ public class StaticUIManager : MonoBehaviour
     [SerializeField]
     TaskPanel taskPanel;
     [SerializeField]
-    TaskPanel storePanel;
+    TimerPanel timerPanel;
+
+    [Header("Credits")]
     [SerializeField]
     private Transform creditChangeItemContainer;
     [SerializeField]
@@ -41,6 +43,7 @@ public class StaticUIManager : MonoBehaviour
     [Header("Side Buttons")]
     [SerializeField]
     ButtonAnimation[] buttonAnimationScripts;
+
 
     Panel currentOpenPanel;
     private Coroutine lastRoutine;
@@ -59,8 +62,11 @@ public class StaticUIManager : MonoBehaviour
             case Panel.Tasks:
                 taskPanel.TogglePanel();
                 break;
+            case Panel.Timer:
+                timerPanel.TogglePanel();
+                break;
             case Panel.Store:
-                storePanel.TogglePanel();
+                timerPanel.TogglePanel();
                 break;
             default:
                 break;
@@ -74,8 +80,11 @@ public class StaticUIManager : MonoBehaviour
             case Panel.Tasks:
                 taskPanel.ClosePanel();
                 break;
+             case Panel.Timer:
+                timerPanel.ClosePanel();
+                break;
             case Panel.Store:
-                storePanel.ClosePanel();
+                timerPanel.ClosePanel();
                 break;
             default:
                 break;
@@ -115,6 +124,8 @@ public class StaticUIManager : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
     }
+
+
 
 
     
