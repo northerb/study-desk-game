@@ -14,19 +14,29 @@ public class TimerPanel : MonoBehaviour
     [SerializeField]
     private Slider timerBar;
     [SerializeField]
+    private Text timerNameText;
+    [SerializeField]
+    private InputField timerNameInputField;
+    [SerializeField]
     private InputField minutesInputField;
     [SerializeField]
     private InputField secondsInputField;
+    [SerializeField]
+    private GameObject timeRemainingHelperText;
+    [SerializeField]
+    private Text timeRemainingText;
+    [SerializeField]
+    private Text errorText;
     [SerializeField]
     private GameObject fiveMinuteModal;
     [SerializeField]
     private GameObject fifteenMinuteModal;
     [SerializeField]
     private GameObject thirtyMinuteModal;
-
-    //TEMP
     [SerializeField]
-    private GameObject confirmTimerPanel;
+    private CanvasGroup confirmTimerPanel;
+    [SerializeField]
+    private Button stopTimerButton;
 
     [Header("Panel Settings")]
     [SerializeField]
@@ -37,6 +47,8 @@ public class TimerPanel : MonoBehaviour
     private float openLerpSpeed;
     [SerializeField]
     private float closeLerpSpeed;
+    [SerializeField]
+    private float lerpConfirmPanelSpeed;
 
     [Header("Pay")]
     [Tooltip("How long it takes for the player to get paid once")]
@@ -47,9 +59,10 @@ public class TimerPanel : MonoBehaviour
 
 
     
-    public float startingTime;
-    public float remainingTime;
+    float startingTime;
+    float remainingTime;
 
+    string timerName;
 
     bool fiveMinuteShown;
     bool fifteenMinuteShown;
@@ -60,6 +73,8 @@ public class TimerPanel : MonoBehaviour
     bool timerGoing;
     bool open;
     RectTransform thisRect;
+
+    Coroutine lastRoutine;
 
     void Start()
     {
@@ -78,7 +93,6 @@ public class TimerPanel : MonoBehaviour
         if(timerGoing){
             timeToNextPay -= Time.deltaTime;
 
-
             //Get Paid
             if(timeToNextPay <= 0){
                 timeToNextPay = payTime;
@@ -95,14 +109,8 @@ public class TimerPanel : MonoBehaviour
         remainingTime -= Time.deltaTime / 60; //Turn time factor into minutes
 
         if(remainingTime <= 0){
-            SetTimerOff();
+            StopTimer();
         }
-    }
-
-    //When the timer goes off (BEEP BEEP)
-    void SetTimerOff(){
-        startingTime = 0;
-        timerGoing = false;
     }
 
     void UpdateGFX(){
@@ -148,6 +156,10 @@ public class TimerPanel : MonoBehaviour
             }
 
             //Update remaining time text in panel
+            string minutes = ((int)remainingTime).ToString();
+            string seconds = ((int)((remainingTime - (int)remainingTime) * 60)).ToString();
+            timeRemainingText.text = minutes + " Minutes, " + seconds + " Seconds";
+
         }else{
             timerBar.value = 1;
         }
@@ -167,25 +179,84 @@ public class TimerPanel : MonoBehaviour
 
     public void StartTimerOnClick(){
         if(timerGoing){
-            //Prompt are you sure overwrite other timer?????? BOZO????
-            //TEMP
-            confirmTimerPanel.SetActive(true);
+            if(lastRoutine != null) StopCoroutine(lastRoutine);
+            lastRoutine = StartCoroutine(LerpConfirmPanel(true));
         }else{
             StartTimer();
         }
     }
 
-    public void StartTimer(){
-        timerGoing = true;
-        
-        int minutes = int.Parse(minutesInputField.text);
-        float seconds = (float)int.Parse(secondsInputField.text);
-        startingTime = minutes + (seconds / 60);
-        remainingTime = startingTime;
+    public void CancelTimerOnClick(){
+        StopTimer();
+    }
 
-        //Set Modal Bools
-        fiveMinuteShown = false;
-        fifteenMinuteShown = false;
-        thirtyMinuteShown = false;
+    public void NotSureOnClick(){
+        if(lastRoutine != null) StopCoroutine(lastRoutine);
+        lastRoutine = StartCoroutine(LerpConfirmPanel(false));
+    }
+
+    public void StopTimer(){
+        timerName = "None";
+
+        timerNameText.text = timerName;
+
+        timerGoing = false;
+
+        stopTimerButton.interactable = false;
+
+        timeRemainingHelperText.SetActive(false);
+        timeRemainingText.gameObject.SetActive(false);
+
+        //Beep Beep
+    }
+
+    public void StartTimer(){
+        if(int.TryParse(minutesInputField.text, out int minutes) && float.TryParse(secondsInputField.text, out float seconds)){
+            timerGoing = true;
+
+            timerName = timerNameInputField.text;
+
+            timerNameText.text = timerName;
+
+
+            stopTimerButton.interactable = true;
+
+            timeRemainingHelperText.SetActive(true);
+            timeRemainingText.gameObject.SetActive(true);
+
+            startingTime = minutes + (seconds / 60);
+            remainingTime = startingTime;
+
+            //Set Modal Bools
+            fiveMinuteShown = false;
+            fifteenMinuteShown = false;
+            thirtyMinuteShown = false;
+
+            errorText.text = "";
+        }else{
+            errorText.text = "Please enter valid inputs!";
+        }
+        
+    }
+
+    IEnumerator LerpConfirmPanel(bool open){
+        if(open){
+            confirmTimerPanel.interactable = true;
+            confirmTimerPanel.blocksRaycasts = true;
+            while(confirmTimerPanel.alpha < 0.98){
+                confirmTimerPanel.alpha = Mathf.Lerp(confirmTimerPanel.alpha, 1, lerpConfirmPanelSpeed * Time.deltaTime);
+                yield return new WaitForEndOfFrame();
+            }
+            confirmTimerPanel.alpha = 1;
+        }else{
+            confirmTimerPanel.interactable = false;
+            confirmTimerPanel.blocksRaycasts = false;
+            while(confirmTimerPanel.alpha > 0.02){
+                confirmTimerPanel.alpha = Mathf.Lerp(confirmTimerPanel.alpha, 0, lerpConfirmPanelSpeed * Time.deltaTime);
+                yield return new WaitForEndOfFrame();
+            }
+            confirmTimerPanel.alpha = 0;
+        }
+
     }
 }
